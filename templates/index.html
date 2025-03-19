@@ -3,36 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoX Chain</title>
-    <!-- favicon -->
+    <title>VeriChain - Document Verification System</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.jpg') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-  </head>
-  <body data-aos-easing="ease" data-aos-duration="1000" data-aos-delay="0">
-    <div class="loader-wraper" style="display: none;">
-      <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-    </div>
-
-    <section class="home py-5 d-flex align-items-center" id="header">
-      <div class="container text text-light py-5 aos-init aos-animate" data-aos="fade-right">
-        <h1 class="headline text">
-          Automate <span class="text-info">verification</span>  <br>
-          within your Organization
-        </h1>
-        <p class="para  py-3">
-          The NeoXChain platform is a top-tier Document Verification solution <br>
-          designed to improve the efficiency and security of your operations.
-        </p>
-
-        <div class="my-3">
-          <a class="btn bg-danger text-white" href="/upload_details">Upload Details</a>
-          <a class="btn bg-danger text-white" href="/verify">Go Verify</a>
+    <link rel="stylesheet" href="{{ url_for('static', filename='tailwind.min.css') }}">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold">Document Verification</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="hover:text-blue-300">Home</a>
+                    <a href="/upload_details" class="hover:text-blue-300">Register</a>
+                    <a href="/verify" class="hover:text-blue-300">Verify</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- end of container -->
-    </section>
-    <!-- end of home -->
+    </nav>
 
-    </body>
+    <div class="container mx-auto px-6 py-16">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold text-gray-800 mb-6">
+                Secure Document Verification
+            </h1>
+            <p class="text-xl text-gray-600 mb-12">
+                Blockchain-powered verification system for enhanced security and trust
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Register Card -->
+            <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                <div class="text-center mb-6">
+                    <div class="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">Register Document</h2>
+                    <p class="text-gray-600 mt-2">Upload and register your documents securely on the blockchain</p>
+                </div>
+                <div class="text-center">
+                    <a href="/upload_details" class="bg-blue-600 text-white px-6 py-3 rounded-full inline-block hover:bg-blue-700 transition duration-300">
+                        Upload Details
+                    </a>
+                </div>
+            </div>
+
+            <!-- Verify Card -->
+            <div class="bg-white rounded-lg shadow-lg p-8 card-hover">
+                <div class="text-center mb-6">
+                    <div class="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">Verify Document</h2>
+                    <p class="text-gray-600 mt-2">Verify the authenticity of registered documents</p>
+                </div>
+                <div class="text-center">
+                    <a href="/verify" class="bg-green-600 text-white px-6 py-3 rounded-full inline-block hover:bg-green-700 transition duration-300">
+                        Verify Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-20">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Key Features</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Blockchain Security</h3>
+                    <p class="text-gray-600">Immutable records with advanced encryption</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Smart Verification</h3>
+                    <p class="text-gray-600">AI-powered document analysis</p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
+                        <svg class="w-8 h-8 text-purple-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Instant Results</h3>
+                    <p class="text-gray-600">Real-time verification status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>

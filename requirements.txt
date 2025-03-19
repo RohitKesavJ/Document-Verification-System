@@ -1,5 +1,9 @@
-Flask
-web3
-python-dotenv
-google-generativeai
-sqlite3
+Flask==3.0.2
+opencv-python-headless==4.11.0.86
+Pillow==10.2.0
+python-dotenv==1.0.1
+google-generativeai==0.3.2
+numpy==2.0.2
+Werkzeug==3.0.1
+web3==6.15.1
+SQLite3==3.35.0

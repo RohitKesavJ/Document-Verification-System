@@ -16,9 +16,9 @@
                     <p class="text-xs text-gray-500">File should be of format .png, .jpg, .jpeg</p>
                 </div>
                 <form id="file-upload-form" action="/upload_data" method="POST" enctype="multipart/form-data" class="relative w-4/5 h-48 max-w-xs mb-10 bg-white bg-gray-100 rounded-lg shadow-inner">
-                    <input type="file" id="file-upload" name="image" class="hidden" accept=".jpg, .jpeg, .png">
+                    <input type="file" id="file-upload" name="file" class="hidden" accept=".jpg, .jpeg, .png">
                     <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-                        <p class="z-10 text-xs font-light text-center text-gray-500">Drag & Drop your files here</p>
+                        <p id="file-name" class="z-10 text-xs font-light text-center text-gray-500">Drag & Drop your files here</p>
                         <svg class="z-10 w-8 h-8 text-indigo-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
                         </svg>
@@ -40,6 +40,21 @@
     </div>
 
     <script>
+        // Handle file selection
+        const fileInput = document.getElementById('file-upload');
+        const fileName = document.getElementById('file-name');
+        
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                fileName.textContent = `Selected file: ${file.name}`;
+                fileName.classList.add('text-green-600', 'font-semibold');
+            } else {
+                fileName.textContent = 'Drag & Drop your files here';
+                fileName.classList.remove('text-green-600', 'font-semibold');
+            }
+        });
+
         // Handle file upload and progress
         const form = document.getElementById('file-upload-form');
         const progressContainer = document.getElementById('progress-container');
@@ -48,7 +63,15 @@
 
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            button = event.submitter;
+            
+            // Check if file is selected
+            if (!fileInput.files.length) {
+                responseDiv.innerText = 'Please select a file first.';
+                responseDiv.classList.add('text-red-500');
+                return;
+            }
+
+            const button = event.submitter;
             button.disabled = true;
             const formData = new FormData(form);
 
@@ -66,21 +89,25 @@
 
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    status_label = document.getElementById('status');
+                    const status_label = document.getElementById('status');
                     status_label.classList.remove('hidden');
                     progressContainer.classList.add('hidden');
-                    // get the transaction id from the response
-                    response = xhr.responseText;
+                    const response = xhr.responseText;
                     console.log(response);
-                    transaction_label = document.getElementById('transaction');
+                    const transaction_label = document.getElementById('transaction');
                     transaction_label.innerText = "Transaction Hash: " + response;
+                    responseDiv.innerText = '';
                 } else {
-                    responseDiv.innerText = 'Upload failed. Please try again.';
+                    responseDiv.innerText = 'Upload failed: ' + xhr.responseText;
+                    responseDiv.classList.add('text-red-500');
+                    button.disabled = false;
                 }
             };
 
             xhr.onerror = function() {
                 responseDiv.innerText = 'Upload failed. Please try again.';
+                responseDiv.classList.add('text-red-500');
+                button.disabled = false;
             };
 
             xhr.send(formData);

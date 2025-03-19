@@ -5,29 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='favicon.jpg') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='tailwind.min.css') }}">
-    <title>Result</title>
+    <title>Verification Result</title>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+        }
+        .score-ring {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+        .document-image {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            margin: 0 auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
-<body>
-    <div class="min-h-screen flex items-center justify-center bg-gray-300">
-        <div class="flex flex-col items-center justify-center w-full max-w-lg p-8 bg-white rounded-lg shadow-xl">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-semibold">Extraction Result</h2>
+<body class="bg-gray-100">
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold">VeriChain</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="hover:text-blue-300">Home</a>
+                    <a href="/upload_details" class="hover:text-blue-300">Register</a>
+                    <a href="/verify" class="hover:text-blue-300">Verify</a>
+                </div>
             </div>
-            <div class="w-full mb-4">
-                <p class="text-lg font-medium"><strong>Hackathon Name:</strong> {{ dictionary['hackathon_name'] }}</p>
-            </div>
-            <div class="w-full mb-4">
-                <p class="text-lg font-medium"><strong>Participant Name:</strong> {{ dictionary['name'] }}</p>
-            </div>
-            <div class="w-full mb-4">
-                <p class="text-lg font-medium text-green-600 text-center">
-                    <strong>{{ verify_result }} </strong>
-                </p>
-            </div>
-            <div class="mt-6">
-                <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full transition duration-200 ease-in-out">Back to Home</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Header -->
+                <div class="gradient-bg p-6">
+                    <h2 class="text-2xl font-bold text-white text-center">Document Verification Result</h2>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    <!-- Security Score and Document Image in a flex container -->
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
+                        <!-- Security Score -->
+                        <div class="flex-shrink-0">
+                            <div class="relative">
+                                <svg class="w-32 h-32" viewBox="0 0 36 36">
+                                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#edf2f7" stroke-width="3" />
+                                    <path id="score-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="{{ 'green' if result.security_score >= 70 else 'red' }}" stroke-width="3" class="score-ring" style="stroke-dasharray: 100; stroke-dashoffset: {{ 100 - result.security_score }};" />
+                                    <text x="18" y="20.35" class="text-5xl font-bold" text-anchor="middle" fill="{{ 'green' if result.security_score >= 70 else 'red' }}">{{ result.security_score }}</text>
+                                </svg>
+                                <div class="absolute bottom-0 left-0 right-0 text-center text-gray-600">Security Score</div>
+                            </div>
+                        </div>
+
+                        <!-- Document Image -->
+                        <div class="flex-grow bg-gray-50 rounded-lg p-4 max-w-2xl">
+                            <img src="{{ url_for('static', filename='uploads/' + result.filename) if result.filename else '' }}" 
+                                 alt="Uploaded Document" 
+                                 class="w-full h-48 object-contain rounded-lg shadow-sm mx-auto"
+                                 onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Document Information -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Document Information</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600"><span class="font-semibold">Name:</span> {{ result.name }}</p>
+                                <p class="text-gray-600"><span class="font-semibold">Document Info:</span> {{ result.document_info }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600"><span class="font-semibold">Verification Time:</span> {{ result.timestamp }}</p>
+                                <p class="text-gray-600"><span class="font-semibold">Status:</span> 
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium {{ 'bg-green-100 text-green-800' if result.security_score >= 70 else 'bg-red-100 text-red-800' }}">
+                                        {{ '✓ Verified' if result.security_score >= 70 else '✗ Not Verified' }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Analysis -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Security Analysis</h3>
+                        <div class="space-y-4">
+                            <pre class="whitespace-pre-wrap text-gray-600 font-mono bg-gray-100 p-4 rounded">{{ result.security_features }}</pre>
+                        </div>
+                    </div>
+
+                    <!-- Blockchain Information -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Blockchain Record</h3>
+                        <div class="break-all">
+                            <p class="text-gray-600"><span class="font-semibold">Transaction Hash:</span></p>
+                            <p id="transaction" class="font-mono text-sm bg-gray-100 p-2 rounded mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="border-t border-gray-200 p-6">
+                    <div class="flex justify-center space-x-4">
+                        <a href="/verify" class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">
+                            Verify Another Document
+                        </a>
+                        <a href="/" class="bg-gray-600 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition duration-300">
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Animate the security score ring on load
+        window.addEventListener('load', function() {
+            const scorePath = document.getElementById('score-path');
+            if (scorePath) {
+                scorePath.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
+            }
+        });
+    </script>
 </body>
 </html>
